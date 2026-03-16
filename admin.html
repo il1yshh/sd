@@ -108,7 +108,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 <div id="toast"></div>
 
 <script>
-const WORKER_URL = 'https://healthy-kingfisher-53.mirrorrrr.deno.net/';
+const WORKER_URL = 'https://healthy-kingfisher-53.mirrorrrr.deno.net';
 const SUPABASE_URL = 'https://isognckwqrwkmgkzigqh.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlzb2duY2t3cXJ3a21na3ppZ3FoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NzcxODYsImV4cCI6MjA4OTI1MzE4Nn0.UlkdlXVP1V8dD7DehXTqOEtuIN2yyZjDhGM9S4DoPgI'; 
 let adminToken = sessionStorage.getItem('admin_token')||'';
@@ -174,8 +174,6 @@ async function loadTab(tab){
   if(tab==='ban') renderBan(c);
 }
 
-
-
 async function renderSchools(c){
   try{
     const s=await adminApi('GET','/api/admin/stats');
@@ -189,9 +187,21 @@ async function renderSchools(c){
             <div style="font-size:13px;color:var(--text);margin-bottom:3px">${esc(school.name)}</div>
             <div style="font-size:10px;color:var(--text2)">${school.members} участников</div>
           </div>
-          <button class="btn btn-o btn-sm" onclick="viewSchoolChat(${school.id},'${esc(school.name)}')">Чат</button>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-o btn-sm" onclick="viewSchoolChat(${school.id},'${esc(school.name)}')">Чат</button>
+            <button class="btn btn-r btn-sm" onclick="deleteSchool(${school.id},'${esc(school.name)}')">🗑</button>
+          </div>
         </div>`).join('');
   }catch(e){c.innerHTML=`<div class="empty">❌ ${esc(e.message)}</div>`;}
+}
+
+async function deleteSchool(id,name){
+  if(!confirm(`Удалить школу "${name}" и всех её учеников? Это действие необратимо.`)) return;
+  try{
+    await adminApi('DELETE',`/api/admin/school?id=${id}`);
+    toast('✅ Школа удалена');
+    loadStats();loadTab('schools');
+  }catch(e){toast('❌ '+e.message);}
 }
 
 async function viewSchoolChat(schoolId,schoolName){
@@ -277,11 +287,19 @@ async function resolveReport(id){
 function renderBan(c){
   c.innerHTML=`
     <div class="sec-title">// ЗАБАНИТЬ ПОЛЬЗОВАТЕЛЯ</div>
-    <div style="background:var(--card);border:1px solid var(--border2);border-radius:8px;padding:16px">
+    <div style="background:var(--card);border:1px solid var(--border2);border-radius:8px;padding:16px;margin-bottom:20px">
       <div class="field"><label>НИК</label><input class="inp" id="ban-inp" placeholder="ghost_x"></div>
       <div style="font-size:11px;color:var(--text2);margin-bottom:12px;line-height:1.7">⚠️ Бан удалит все заказы пользователя и заблокирует аккаунт.</div>
       <button class="btn btn-r" onclick="submitBan()" style="width:100%;padding:11px">⛔ ЗАБАНИТЬ</button>
-    </div>`;
+    </div>
+
+    <div class="sec-title">// УДАЛИТЬ АККАУНТ</div>
+    <div style="background:var(--card);border:1px solid var(--border2);border-radius:8px;padding:16px">
+      <div class="field"><label>НИК</label><input class="inp" id="delete-user-inp" placeholder="ghost_x"></div>
+      <div style="font-size:11px;color:var(--red);margin-bottom:12px;line-height:1.7">⚠️ Аккаунт удалится навсегда вместе со всеми заказами, сообщениями, оценками.</div>
+      <button class="btn btn-r" onclick="deleteUser()" style="width:100%;padding:11px">🗑 УДАЛИТЬ АККАУНТ</button>
+    </div>
+  `;
 }
 async function banUser(nick){
   if(!confirm(`Забанить ${nick}?`)) return;
@@ -292,6 +310,17 @@ async function submitBan(){
   const nick=document.getElementById('ban-inp').value.trim();
   if(!nick){toast('⚠️ Введи ник');return;}
   await banUser(nick);
+}
+async function deleteUser(){
+  const nick=document.getElementById('delete-user-inp').value.trim();
+  if(!nick){toast('⚠️ Введи ник');return;}
+  if(!confirm(`Удалить аккаунт ${nick} и все его данные? Это действие необратимо.`)) return;
+  try{
+    await adminApi('DELETE',`/api/admin/user?nick=${encodeURIComponent(nick)}`);
+    document.getElementById('delete-user-inp').value='';
+    toast('✅ Аккаунт удалён');
+    loadStats();
+  }catch(e){toast('❌ '+e.message);}
 }
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
