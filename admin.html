@@ -93,6 +93,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="stat-card" onclick="switchTab('reports')"><div class="stat-val s-r" id="st-reports">–</div><div class="stat-lbl">ЖАЛОБ</div></div>
     <div class="stat-card" onclick="switchTab('schools')"><div class="stat-val s-p" id="st-schools">–</div><div class="stat-lbl">ШКОЛ</div></div>
     <div class="stat-card" onclick="switchTab('schools')"><div class="stat-val s-g" id="st-users">–</div><div class="stat-lbl">ПОЛЬЗОВАТЕЛЕЙ</div></div>
+    <div class="stat-card" onclick="loadOnlineCount()"><div class="stat-val s-g" id="online-count">–</div><div class="stat-lbl">ОНЛАЙН</div></div>
   </div>
 
   <div class="tabs">
@@ -137,6 +138,8 @@ function showAdmin(){
   document.getElementById('login-screen').style.display='none';
   document.getElementById('admin-screen').style.display='block';
   loadStats();loadTab('schools');
+  loadOnlineCount();
+  setInterval(loadOnlineCount, 30000);
 }
 async function adminApi(method,path,body){
   const res=await fetch(WORKER_URL+path,{method,headers:{'Content-Type':'application/json','Authorization':'Bearer '+adminToken},body:body?JSON.stringify(body):undefined});
@@ -155,6 +158,13 @@ async function loadStats(){
     document.getElementById('st-schools').textContent=s.schools.length;
     document.getElementById('st-users').textContent=s.total_users;
   }catch(e){toast('❌ '+e.message);}
+}
+async function loadOnlineCount(){
+  try{
+    const res = await fetch(WORKER_URL+'/api/online');
+    const data = await res.json();
+    document.getElementById('online-count').textContent = data.count;
+  }catch(e){}
 }
 
 function switchTab(tab){

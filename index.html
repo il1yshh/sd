@@ -186,7 +186,7 @@ select.inp{appearance:none;cursor:pointer}
 <header>
   <div class="logo">СКУЛДРОП<sub>v5</sub></div>
   <div class="hdr-r">
-
+    <div class="online-count" style="display:flex;align-items:center;gap:4px;margin-right:8px;font-size:10px;color:var(--green)">👥 <span id="online-count-header">0</span></div>
     <button class="nick-btn" onclick="showScreen('profile')">
       <div class="dot dot-p"></div><span id="hdr-nick">аноним</span>
     </button>
@@ -285,7 +285,7 @@ select.inp{appearance:none;cursor:pointer}
       <div class="school-ico">🏫</div>
       <div>
         <div class="school-name-d" id="school-name-d">—</div>
-        <div class="school-stats-d" id="school-stats-d">участников: —</div>
+        <div class="school-stats-d" id="school-stats-d"></div>
       </div>
     </div>
     <div class="sec-head">
@@ -401,110 +401,19 @@ select.inp{appearance:none;cursor:pointer}
 </nav>
 </div>
 
-
-
-
-
-<!-- MODAL: ДЕТАЛИ -->
-<div class="modal-bg" id="modal-detail">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div id="detail-body"></div>
-    <button class="btn btn-o btn-full btn-sm" onclick="closeModal('modal-detail')">Закрыть</button>
-  </div>
-</div>
-
-<!-- MODAL: ЧАТ ЗАКАЗА -->
-<div class="modal-bg" id="modal-order-chat">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title" id="order-chat-title">💬 ЧАТ</div>
-    <div class="chat-box" id="order-chat-box"></div>
-    <div class="chat-row">
-      <input class="inp" id="order-chat-inp" placeholder="сообщение..." maxlength="500"
-        onkeydown="if(event.key==='Enter')sendOrderMsg()">
-      <button class="btn btn-g btn-sm" onclick="sendOrderMsg()">→</button>
-    </div>
-    <div class="gap"></div>
-    <button class="btn btn-o btn-full btn-sm" onclick="closeModal('modal-order-chat')">Закрыть</button>
-  </div>
-</div>
-
-<!-- MODAL: ОЦЕНИТЬ -->
-<div class="modal-bg" id="modal-rate">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">⭐ ОЦЕНИТЬ</div>
-    <div style="text-align:center;margin-bottom:16px">
-      <div class="stars" id="rate-stars">
-        <span class="star" data-v="1" onclick="setStar(1)">★</span>
-        <span class="star" data-v="2" onclick="setStar(2)">★</span>
-        <span class="star" data-v="3" onclick="setStar(3)">★</span>
-        <span class="star" data-v="4" onclick="setStar(4)">★</span>
-        <span class="star" data-v="5" onclick="setStar(5)">★</span>
-      </div>
-      <div style="font-size:11px;color:var(--text2)" id="star-label">выбери оценку</div>
-    </div>
-    <div class="field"><label>КОММЕНТАРИЙ (необязательно)</label>
-      <textarea class="inp" id="rate-comment" style="min-height:60px" maxlength="200"></textarea>
-    </div>
-    <button class="btn btn-g btn-full" onclick="submitRating()">✅ ОТПРАВИТЬ</button>
-    <div class="gap"></div>
-    <button class="btn btn-o btn-full btn-sm" onclick="closeModal('modal-rate')">Отмена</button>
-  </div>
-</div>
-
-<!-- MODAL: ЖАЛОБА -->
-<div class="modal-bg" id="modal-report">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">🚩 ЖАЛОБА</div>
-    <div class="field"><label>ПРИЧИНА</label>
-      <textarea class="inp" id="report-reason" style="min-height:80px" maxlength="300"></textarea>
-    </div>
-    <button class="btn btn-r btn-full" onclick="submitReport()">🚩 ОТПРАВИТЬ</button>
-    <div class="gap"></div>
-    <button class="btn btn-o btn-full btn-sm" onclick="closeModal('modal-report')">Отмена</button>
-  </div>
-</div>
-
-<!-- MODAL: СОГЛАШЕНИЕ -->
-<div class="modal-bg" id="modal-agreement">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">📋 ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ</div>
-    <div style="font-size:11px;color:var(--text2);line-height:1.9;max-height:55vh;overflow-y:auto;padding-right:4px">
-      <b style="color:var(--text)">1. ПЛАТФОРМА</b><br>
-      СКУЛДРОП — информационная платформа (соцсеть + маркетплейс). Администрация не является стороной сделок между пользователями.<br><br>
-      <b style="color:var(--text)">2. ОТВЕТСТВЕННОСТЬ</b><br>
-      Администрация <b style="color:var(--red)">не несёт ответственности</b> за качество выполнения заказов, споры между пользователями, невыполнение обязательств и убытки.<br><br>
-      <b style="color:var(--text)">3. КОМИССИЯ</b><br>
-      Комиссия: <b style="color:var(--green)">0%</b>. Все расчёты наличными напрямую между пользователями.<br><br>
-      <b style="color:var(--text)">4. ЗАПРЕЩЕНО</b><br>
-      Незаконные заказы, оружие, наркотики, угрозы, оскорбления.<br><br>
-      <b style="color:var(--text)">5. БЛОКИРОВКА</b><br>
-      Администрация вправе заблокировать нарушителей без объяснений.<br><br>
-      <b style="color:var(--text)">6. КОНФИДЕНЦИАЛЬНОСТЬ</b><br>
-      Персональные данные не собираются. Пароль хранится в виде SHA-256 хэша.<br><br>
-      <b style="color:var(--red)">Регистрируясь вы принимаете все условия соглашения.</b>
-    </div>
-    <div class="gap"></div>
-    <button class="btn btn-g btn-full" onclick="closeModal('modal-agreement');['setup-agree','agree-check'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=true})">✅ ПРИНИМАЮ</button>
-    <div class="gap"></div>
-    <button class="btn btn-o btn-full btn-sm" onclick="closeModal('modal-agreement')">Закрыть</button>
-  </div>
-</div>
+<!-- МОДАЛКИ -->
+<div class="modal-bg" id="modal-detail"><div class="modal"><div class="modal-handle"></div><div id="detail-body"></div><button class="btn btn-o btn-full btn-sm" onclick="closeModal('modal-detail')">Закрыть</button></div></div>
+<div class="modal-bg" id="modal-order-chat"><div class="modal"><div class="modal-handle"></div><div class="modal-title" id="order-chat-title">💬 ЧАТ</div><div class="chat-box" id="order-chat-box"></div><div class="chat-row"><input class="inp" id="order-chat-inp" maxlength="500" onkeydown="if(event.key==='Enter')sendOrderMsg()"><button class="btn btn-g btn-sm" onclick="sendOrderMsg()">→</button></div><div class="gap"></div><button class="btn btn-o btn-full btn-sm" onclick="closeModal('modal-order-chat')">Закрыть</button></div></div>
+<div class="modal-bg" id="modal-rate"><div class="modal"><div class="modal-handle"></div><div class="modal-title">⭐ ОЦЕНИТЬ</div><div style="text-align:center;margin-bottom:16px"><div class="stars" id="rate-stars"><span class="star" data-v="1" onclick="setStar(1)">★</span><span class="star" data-v="2" onclick="setStar(2)">★</span><span class="star" data-v="3" onclick="setStar(3)">★</span><span class="star" data-v="4" onclick="setStar(4)">★</span><span class="star" data-v="5" onclick="setStar(5)">★</span></div><div style="font-size:11px;color:var(--text2)" id="star-label">выбери оценку</div></div><div class="field"><label>КОММЕНТАРИЙ</label><textarea class="inp" id="rate-comment" style="min-height:60px" maxlength="200"></textarea></div><button class="btn btn-g btn-full" onclick="submitRating()">✅ ОТПРАВИТЬ</button><div class="gap"></div><button class="btn btn-o btn-full btn-sm" onclick="closeModal('modal-rate')">Отмена</button></div></div>
+<div class="modal-bg" id="modal-report"><div class="modal"><div class="modal-handle"></div><div class="modal-title">🚩 ЖАЛОБА</div><div class="field"><label>ПРИЧИНА</label><textarea class="inp" id="report-reason" style="min-height:80px" maxlength="300"></textarea></div><button class="btn btn-r btn-full" onclick="submitReport()">🚩 ОТПРАВИТЬ</button><div class="gap"></div><button class="btn btn-o btn-full btn-sm" onclick="closeModal('modal-report')">Отмена</button></div></div>
+<div class="modal-bg" id="modal-agreement"><div class="modal"><div class="modal-handle"></div><div class="modal-title">📋 ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ</div><div style="font-size:11px;color:var(--text2);line-height:1.9;max-height:55vh;overflow-y:auto;padding-right:4px"><b style="color:var(--text)">1. ПЛАТФОРМА</b><br>СКУЛДРОП — информационная платформа (соцсеть + маркетплейс). Администрация не является стороной сделок между пользователями.<br><br><b style="color:var(--text)">2. ОТВЕТСТВЕННОСТЬ</b><br>Администрация <b style="color:var(--red)">не несёт ответственности</b> за качество выполнения заказов, споры между пользователями, невыполнение обязательств и убытки.<br><br><b style="color:var(--text)">3. КОМИССИЯ</b><br>Комиссия: <b style="color:var(--green)">0%</b>. Все расчёты наличными напрямую между пользователями.<br><br><b style="color:var(--text)">4. ЗАПРЕЩЕНО</b><br>Незаконные заказы, оружие, наркотики, угрозы, оскорбления.<br><br><b style="color:var(--text)">5. БЛОКИРОВКА</b><br>Администрация вправе заблокировать нарушителей без объяснений.<br><br><b style="color:var(--text)">6. КОНФИДЕНЦИАЛЬНОСТЬ</b><br>Персональные данные не собираются. Пароль хранится в виде SHA-256 хэша.<br><br><b style="color:var(--red)">Регистрируясь вы принимаете все условия соглашения.</b></div><div class="gap"></div><button class="btn btn-g btn-full" onclick="closeModal('modal-agreement');['setup-agree','agree-check'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=true})">✅ ПРИНИМАЮ</button><div class="gap"></div><button class="btn btn-o btn-full btn-sm" onclick="closeModal('modal-agreement')">Закрыть</button></div></div>
 
 <div id="toast"></div>
 
 <script>
-// ════════════════════════════════
-// ⚙️ ВСТАВЬ СВОИ ДАННЫЕ
-// ════════════════════════════════
-const WORKER_URL   = 'https://healthy-kingfisher-53.mirrorrrr.deno.net';
+const WORKER_URL = 'https://healthy-kingfisher-53.mirrorrrr.deno.net';
 const SUPABASE_URL = 'https://isognckwqrwkmgkzigqh.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlzb2duY2t3cXJ3a21na3ppZ3FoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NzcxODYsImV4cCI6MjA4OTI1MzE4Nn0.UlkdlXVP1V8dD7DehXTqOEtuIN2yyZjDhGM9S4DoPgI';
-// ════════════════════════════════
 
 const COMMISSION = 0.05;
 const DB_OK = SUPABASE_URL !== 'YOUR_SUPABASE_URL';
@@ -514,6 +423,7 @@ let P = { nick:'', school:'', schoolId:null };
 let myTaken=[], currentCat='all', myTab='posted', feedScope='my';
 let rateOrderId=null, reportOrderId=null, orderChatId=null, selectedStar=0;
 let searchQuery='', allOrders=[], schoolChatTimer=null, selectedSchoolId=null;
+let lastOrderCount = 0;
 
 function loadLocal(){
   try{
@@ -542,11 +452,73 @@ async function api(method,path,body){
   return d;
 }
 
-
 async function hashPassword(pass){
   const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(pass));
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
+
+// ── ONLINE ─────────────────────────────────────
+async function loadOnlineCount(){
+  try{
+    const res = await fetch(WORKER_URL+'/api/online');
+    const data = await res.json();
+    document.getElementById('online-count-header').textContent = data.count;
+  }catch(e){}
+}
+async function loadSchoolOnline(){
+  if(!P.schoolId) return;
+  try{
+    const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+    const {data} = await sb.from('users').select('id').eq('school_id',P.schoolId).gte('last_seen',fiveMinAgo);
+    document.getElementById('school-online').textContent = data?.length || 0;
+  }catch(e){}
+}
+setInterval(loadOnlineCount, 30000);
+setInterval(loadSchoolOnline, 30000);
+
+// ── NOTIFICATION ─────────────────────────────────────
+async function checkNewOrders(){
+  if(!P.nick) return;
+  try{
+    const {data} = await sb.from('orders').select('id,title,amount,cat').eq('status','open').order('created_at',{ascending:false}).limit(1);
+    if(!data?.length) return;
+    const lastId = data[0].id;
+    if(lastOrderCount === 0){
+      lastOrderCount = 1;
+      return;
+    }
+    if(lastOrderCount === 1) return;
+    const cats = {hw:'📚',food:'🍕',notes:'📝',task:'⚡'};
+    showNotification(`Новый заказ: ${cats[data[0].cat] || ''} ${data[0].title} — ${data[0].amount} ₽`, data[0].id);
+    lastOrderCount = 1;
+  }catch(e){}
+}
+function showNotification(text, orderId){
+  const n = document.createElement('div');
+  n.style.position = 'fixed';
+  n.style.bottom = '90px';
+  n.style.left = '50%';
+  n.style.transform = 'translateX(-50%)';
+  n.style.backgroundColor = 'var(--card)';
+  n.style.border = '2px solid var(--green)';
+  n.style.borderRadius = '8px';
+  n.style.padding = '12px 18px';
+  n.style.fontSize = '12px';
+  n.style.color = 'var(--text)';
+  n.style.zIndex = '1000';
+  n.style.cursor = 'pointer';
+  n.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+  n.style.maxWidth = '90%';
+  n.style.textAlign = 'center';
+  n.textContent = text;
+  n.onclick = async ()=>{
+    await openDetail(orderId);
+    n.remove();
+  };
+  document.body.appendChild(n);
+  setTimeout(() => n.remove(), 10000);
+}
+setInterval(checkNewOrders, 15000);
 
 // ── SCHOOL SEARCH ─────────────────────────────────────
 async function schoolSearch(query){
@@ -634,6 +606,8 @@ function enterApp(){
   document.getElementById('hdr-nick').textContent=P.nick;
   showScreen('feed');
   renderProfile();
+  loadOnlineCount();
+  loadSchoolOnline();
 }
 function logout(){
   if(!confirm('Выйти из аккаунта?'))return;
@@ -641,15 +615,9 @@ function logout(){
   localStorage.clear();location.reload();
 }
 
-
-
-// ── BALANCE ───────────────────────────────────────────
 function updateBalanceUI(){saveLocal();}
 async function syncBalance(){}
 
-
-
-// ── SCREENS ───────────────────────────────────────────
 const SCREENS=['feed','school','my','post','profile'];
 function showScreen(name){
   SCREENS.forEach(s=>{
@@ -663,7 +631,6 @@ function showScreen(name){
   if(name==='school'){loadSchoolScreen();schoolChatTimer=setInterval(loadSchoolMessages,5000);}
   if(name==='my')loadMy();
   if(name==='post')renderPost();
-
   if(name==='profile')loadProfile();
 }
 
@@ -674,7 +641,8 @@ async function loadSchoolScreen(){
     const{data:school}=await sb.from('schools').select('name').eq('id',P.schoolId).single();
     const{count}=await sb.from('users').select('*',{count:'exact',head:true}).eq('school_id',P.schoolId);
     document.getElementById('school-name-d').textContent=school?.name||P.school;
-    document.getElementById('school-stats-d').textContent='участников: '+(count||0);
+    document.getElementById('school-stats-d').innerHTML = 'участников: '+(count||0)+' · 👥 <span id="school-online">0</span> онлайн';
+    await loadSchoolOnline();
   }catch(e){}
   loadSchoolMessages();
 }
@@ -770,7 +738,6 @@ function orderCard(o){
   </div>`;
 }
 
-// ── DETAIL ────────────────────────────────────────────
 async function openDetail(id){
   let o=allOrders.find(x=>x.id===id);
   if(!o&&DB_OK){const{data}=await sb.from('orders').select('*').eq('id',id).single();o=data;}
@@ -829,25 +796,22 @@ async function takeOrder(id){
   }catch(e){toast('❌ '+e.message);}
 }
 async function confirmDone(id){
-  if(!confirm('Подтвердить? Деньги уйдут исполнителю.'))return;
+  if(!confirm('Подтвердить?'))return;
   try{
-    const d=await api('PUT',`/api/orders/${id}/done`,{nick:P.nick});
-    // cash only - no balance changes
+    await api('PUT',`/api/orders/${id}/done`,{nick:P.nick});
     closeModal('modal-detail');loadFeed();
     toast('✅ Выполнено! Не забудьте рассчитаться наличными.');
   }catch(e){toast('❌ '+e.message);}
 }
 async function cancelOrder(id){
-  if(!confirm('Отменить заказ? Деньги вернутся.'))return;
+  if(!confirm('Отменить заказ?'))return;
   try{
     await api('DELETE',`/api/orders/${id}`,{nick:P.nick});
-    // cash only - no balance changes
     closeModal('modal-detail');loadFeed();
-    toast('↩️ Отменено, деньги возвращены.');
+    toast('↩️ Отменено');
   }catch(e){toast('❌ '+e.message);}
 }
 
-// ── MY ────────────────────────────────────────────────
 async function loadMy(){
   const list=document.getElementById('my-list');
   list.innerHTML=`<div class="loader"><div class="spin">⟳</div></div>`;
@@ -873,7 +837,6 @@ function switchTab(tab){
   loadMy();
 }
 
-// ── POST ──────────────────────────────────────────────
 function renderPost(){
   document.getElementById('post-form').style.display='block';
 }
@@ -906,7 +869,6 @@ async function submitOrder(){
   btn.disabled=false;btn.textContent='⚡ ОПУБЛИКОВАТЬ ЗАКАЗ';
 }
 
-// ── ORDER CHAT ────────────────────────────────────────
 async function openOrderChat(orderId){
   orderChatId=orderId;
   const o=allOrders.find(x=>x.id===orderId);
@@ -938,7 +900,6 @@ async function sendOrderMsg(){
   }catch(e){toast('❌ '+e.message);}
 }
 
-// ── RATING ────────────────────────────────────────────
 function openRateModal(orderId){
   rateOrderId=orderId;selectedStar=0;
   document.querySelectorAll('.star').forEach(s=>s.classList.remove('lit'));
@@ -962,7 +923,6 @@ async function submitRating(){
   }catch(e){toast('❌ '+e.message);}
 }
 
-// ── REPORT ────────────────────────────────────────────
 function openReport(orderId){reportOrderId=orderId;document.getElementById('report-reason').value='';openModal('modal-report');}
 async function submitReport(){
   const reason=document.getElementById('report-reason').value.trim();
@@ -971,7 +931,6 @@ async function submitReport(){
   catch(e){toast('❌ '+e.message);}
 }
 
-// ── PROFILE ───────────────────────────────────────────
 async function loadProfile(){
   renderProfile();
   if(!DB_OK)return;
@@ -1008,7 +967,6 @@ async function changePassword(){
   }catch(e){toast('❌ '+e.message);}
 }
 
-// ── UTILS ─────────────────────────────────────────────
 function copyText(txt){navigator.clipboard.writeText(txt).then(()=>toast('📋 Скопировано'));}
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
@@ -1018,7 +976,6 @@ function toast(msg){const el=document.getElementById('toast');el.textContent=msg
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function timeAgo(ts){const d=Date.now()-new Date(ts).getTime();if(d<60000)return 'только что';if(d<3600000)return Math.floor(d/60000)+'м назад';if(d<86400000)return Math.floor(d/3600000)+'ч назад';return Math.floor(d/86400000)+'д назад';}
 
-// ── INIT ──────────────────────────────────────────────
 loadLocal();
 if(P.nick)enterApp();
 </script>
