@@ -8,7 +8,7 @@
 
 1️⃣ Регистрация
 
-Зайди на сайт: https://il1yshh.github.io/skolodrop/
+Зайди на сайт: https://skolodrop.github.io/skolodrop/
 
 
 
